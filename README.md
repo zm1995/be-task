@@ -90,14 +90,23 @@ $ npm run start:prod
   ```json
   {
     "success": true,
-    "processed": 2,
+    "processed": 3,
     "transactions": [
       {
-        "referenceNumber": "TXN-...",
         "userId": 1,
-        "transactionAmount": 100.50,
         "endingBalance": 100.50,
-        "updatedDateTime": "2024-01-01T00:00:00.000Z"
+        "updatedAt": "2024-01-01T00:00:00.000Z"
+      },
+      {
+        "userId": 2,
+        "endingBalance": 50.25,
+        "updatedAt": "2024-01-01T00:00:00.000Z"
+      }
+    ],
+    "errors": [
+      {
+        "userId": 3,
+        "error": "Balance is less than 0"
       }
     ]
   }
