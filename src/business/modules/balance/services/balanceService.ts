@@ -20,10 +20,15 @@ export class BalanceService {
 
     async getUserBalance(userId: number) {
         this.logger.log(`Getting balance for user: ${userId}`);
+        try {
         const userBalance = await this.balanceRepository.findOne({ where: { userId } });
-        const balance = userBalance?.balance ?? 0;
-        this.logger.log(`User ${userId} balance: ${balance}`);
-        return balance;
+            const balance = userBalance?.balance ?? 0;
+            this.logger.log(`User ${userId} balance: ${balance}`);
+            return balance;
+        } catch (error) {
+            this.logger.error(`Error getting balance for user ${userId}: ${error.message}`, error.stack);
+            throw error;
+        }
     }
 
     async issueTransactions(issueTransactionsDto: IssueTransactionsDto) {
