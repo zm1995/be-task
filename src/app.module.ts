@@ -3,11 +3,14 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { WinstonModule } from 'nest-winston';
 import { BalanceModule } from './business/modules/balance/balance.module';
+import { winstonConfig } from './config/winston.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
+    WinstonModule.forRoot(winstonConfig),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -18,7 +21,7 @@ import { BalanceModule } from './business/modules/balance/balance.module';
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_NAME'),
-        entities: [__dirname + '/**/*.entity{.ts,.js}'],
+        entities: [__dirname + '/business/entities/*.entity{.ts,.js}'],
         synchronize: configService.get('NODE_ENV') === 'development',
       }),
     }),

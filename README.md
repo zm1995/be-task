@@ -9,6 +9,7 @@ A NestJS-based backend application for managing user balances and transactions. 
 - PostgreSQL database integration
 - Transaction-based operations for data consistency
 - RESTful API endpoints
+- Winston logging with file and console transports
 
 ## Database Setup
 
@@ -36,7 +37,10 @@ DB_PASSWORD=your_db_password
 DB_NAME=your_database_name
 NODE_ENV=development
 PORT=3000
+LOG_LEVEL=info
 ```
+
+**Log Levels**: `error`, `warn`, `info`, `debug`, `verbose`
 
 ## Project setup
 
@@ -114,7 +118,33 @@ $ npm run start:prod
 
 **Note**: The `option` field is a boolean that can be used to control transaction processing behavior.
 
+## Logging
 
-## License
+The application uses Winston for logging with the following configuration:
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+- **Console Transport**: Colored output for development
+- **File Transport**: 
+  - `logs/error.log` - Error level logs only
+  - `logs/combined.log` - All logs
+
+Log files are automatically rotated when they reach 5MB, keeping up to 5 files.
+
+### Using the Logger
+
+The logger is integrated into NestJS and can be used in any service:
+
+```typescript
+import { Injectable, Logger } from '@nestjs/common';
+
+@Injectable()
+export class YourService {
+  private readonly logger = new Logger(YourService.name);
+
+  someMethod() {
+    this.logger.log('Info message');
+    this.logger.warn('Warning message');
+    this.logger.error('Error message', error.stack);
+    this.logger.debug('Debug message');
+  }
+}
+```
